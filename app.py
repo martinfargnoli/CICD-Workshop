@@ -55,8 +55,8 @@ def create_poll():
         polls_df.to_csv("polls.csv")
         return redirect(url_for("index"))
     
-def test_placeholder():
-    pass
+def placeholder():
+    return True
 
 if __name__ == "__main__":
     app.run(host="localhost", debug=True)
