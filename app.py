@@ -54,6 +54,9 @@ def create_poll():
         polls_df.loc[max(polls_df.index.values) + 1] = [poll, option1, option2, option3, 0, 0, 0]
         polls_df.to_csv("polls.csv")
         return redirect(url_for("index"))
+    
+def test_placeholder():
+    pass
 
 if __name__ == "__main__":
     app.run(host="localhost", debug=True)
