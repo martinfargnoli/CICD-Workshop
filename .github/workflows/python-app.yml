@@ -28,7 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           # pip install flake8 pytest flask pandas
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -39,11 +42,15 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
-
+  tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Get latest release version
         id: get_release
         run: |
-          curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin)['tag_name'])"
+          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin)['tag_name'])" || echo "v0.0.0")
+          echo "::set-output name=release_version::$release_version"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -54,3 +61,4 @@ jobs:
           # Remove the 'v' prefix if present and increment the version number
           next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo "::set-output name=next_version::$next_version"
+
