@@ -62,6 +62,7 @@ jobs:
           echo "------------------------"
           release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin).get('tag_name', 'v0.0.0'))")
           echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
+          echo "::debug::Release version seteado $release_version"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -71,9 +72,9 @@ jobs:
           release_version: ${{ steps.get_release.outputs.release_version }}
         run: |
           current_version=$release_version
-          echo 'current_version: ' $current_version|
+          echo "::debug::Current version seteado $current_version"
           echo '--------'
           next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
-          echo $next_version
+          echo "::debug::Next version $next_version"
           echo '--------'
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
