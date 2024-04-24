@@ -28,7 +28,7 @@ jobs:
     if: |
       github.event_name == 'pull_request' &&
       github.event.action == 'opened' &&
-      github.event.pull_request.base.ref in ['main', 'develop']
+      contains(fromJSON('["develop", "main"]'), github.event.pull_request.base.ref)
   # needs: build
     steps:
       - uses: actions/checkout@v4
