@@ -60,18 +60,22 @@ jobs:
       - name: Get latest release version
         id: get_release
         run: |
+          echo "------------------------"
           release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin).get('tag_name', 'v0.0.0'))")
-          echo "{release_version}={$release_version}" >> $GITHUB_STATE
+          echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate next version
         id: calculate_version
+        env:
+          release_version: ${{ steps.get_release.outputs.release_version }}
         run: |
-          current_version=${{ steps.get_release.outputs.stdout }}
-          echo $current_version
+          current_version=$release_version
+          echo 'current_version: ' $current_version
           echo '--------'
           next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
           echo $next_version
           echo '--------'
-          echo "{next_version}={$next_version}" >> $GITHUB_STATE
+          echo "next_version=$next_version" >> '$GITHUB_OUTPUT'
