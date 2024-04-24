@@ -1,0 +1,88 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: pipelinePython
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+
+      
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      contains(fromJSON('["develop", "main"]'), github.event.pull_request.base.ref)
+  # needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Test with pytest
+        run: |
+          pytest
+  tagging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get latest release version
+        id: get_release
+        run: |
+          set -x
+          echo "------------------------"
+          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin).get('tag_name', 'v0.0.0'))")
+          echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
+          echo "::debug::Release version seteado $release_version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate next version
+        id: calculate_version
+        env:
+          release_version: ${{ steps.get_release.outputs.release_version }}
+          branch_name: ${{ github.ref }}
+        run: |
+          set -x
+          current_version=$release_version
+          echo "::debug:: Current version seteado $current_version"
+          echo "::debug:: Branch name $branch_name"
+          if [[ "$branch_name" == "refs/heads/main" ]]; then
+            echo ":: entramos papa, branch main"
+            next_version=$(echo "$current_version" | sed 's/^v//' | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
+          elif [[ "$branch_name" == "refs/heads/develop" ]]; then
+            echo ":: entramos papa, branch develop"
+            next_version=$(echo "$current_version" | sed 's/^v//' | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
+          fi
+          echo "::debug::Next version $next_version"
+          echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
