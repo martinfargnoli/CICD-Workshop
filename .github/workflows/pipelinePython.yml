@@ -71,12 +71,16 @@ jobs:
         id: calculate_version
         env:
           release_version: ${{ steps.get_release.outputs.release_version }}
+          branch_name: ${{ github.ref }}
         run: |
           set -x
           current_version=$release_version
           echo "::debug::Current version seteado $current_version"
-          echo '--------'
-          next_version=$(echo "$current_version" | sed 's/^v//' | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          
+          if [[ "$branch_name" == "refs/heads/main" ]]; then
+            next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
+          elif [[ "$branch_name" == "refs/heads/develop" ]]; then
+            next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
+
           echo "::debug::Next version $next_version"
-          echo '--------'
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
