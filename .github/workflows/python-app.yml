@@ -60,7 +60,7 @@ jobs:
       - name: Get latest release version
         id: get_release
         run: |
-          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin)['tag_name'])" || echo "v0.0.0")
+          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin).get('tag_name', 'v0.0.0'))")
           echo "{release_version}={$release_version}" >> $GITHUB_STATE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
