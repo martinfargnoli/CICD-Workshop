@@ -16,20 +16,20 @@ on:
 permissions:
   contents: read
 
-jobs:
 #   build:
 #     runs-on: ubuntu-latest
 #     steps:
 #       - uses: actions/checkout@v4
 
       
+jobs:
   test:
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'pull_request' &&
       github.event.action == 'opened' &&
-      contains(['main', 'develop'], github.event.pull_request.base.ref)
-    # needs: build
+      github.event.pull_request.base.ref in ['main', 'develop']
+  # needs: build
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
