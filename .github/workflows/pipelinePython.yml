@@ -59,6 +59,7 @@ jobs:
       - name: Get latest release version
         id: get_release
         run: |
+          set -x
           echo "------------------------"
           release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | python -c "import sys, json; print(json.load(sys.stdin).get('tag_name', 'v0.0.0'))")
           echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
@@ -71,6 +72,7 @@ jobs:
         env:
           release_version: ${{ steps.get_release.outputs.release_version }}
         run: |
+          set -x
           current_version=$release_version
           echo "::debug::Current version seteado $current_version"
           echo '--------'
