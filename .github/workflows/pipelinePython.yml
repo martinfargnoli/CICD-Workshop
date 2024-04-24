@@ -75,11 +75,13 @@ jobs:
         run: |
           set -x
           current_version=$release_version
-          echo "::debug::Current version seteado $current_version"
-          
+          echo "::debug:: Current version seteado $current_version"
+          echo "::debug:: Branch name $branch_name"
           if [[ "$branch_name" == "refs/heads/main" ]]; then
+            echo ":: entramos papa, branch main"
             next_version=$(echo "$current_version" | sed 's/^v//' | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
           elif [[ "$branch_name" == "refs/heads/develop" ]]; then
+            echo ":: entramos papa, branch develop"
             next_version=$(echo "$current_version" | sed 's/^v//' | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
 
           echo "::debug::Next version $next_version"
