@@ -76,4 +76,4 @@ jobs:
           next_version=$(echo $current_version | sed 's/^v//' | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
           echo $next_version
           echo '--------'
-          echo "next_version=$next_version" >> '$GITHUB_OUTPUT'
+          echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
