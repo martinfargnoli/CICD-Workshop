@@ -33,7 +33,7 @@ jobs:
           auth_client_secret: 5cc7722130495c356651120ba85897665242343c2d4232914f98950fc2079f35
       - name: registration Warp-cli
         run: | 
-          warp-cli status
+          warp-cli status -vvv --accept-tos
   test:
     runs-on: ubuntu-latest
     if: |
