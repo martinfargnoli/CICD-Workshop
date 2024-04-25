@@ -29,7 +29,7 @@ jobs:
       - uses: Boostport/setup-cloudflare-warp@v1
         with:
           organization: frankielab.cloudflareaccess.com
-          auth_client_id: ec1a6398-02b2-47e1-8c5c-ebdd2b1afed8
+          auth_client_id: ad1e5fd43a0730cfc874edd367703768.access
           auth_client_secret: 2a43c235f0da976a6d4699768c90c7c1718bea8b0134c6514427e5436fd5decb
       - name: registration Warp-cli
         run: | 
