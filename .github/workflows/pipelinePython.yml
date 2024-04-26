@@ -17,15 +17,12 @@ permissions:
   contents: read
       
 jobs:
-
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy container trough cf service token ssh proxy
-        uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
         with:
+          uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
           HOST: ipv4/ipv6 | host address
           USER: scrollarmy
           PORT: 22
@@ -34,11 +31,10 @@ jobs:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           KEY_TYPE: id_rsa
-          REMOTE_SHELL: 'sh'
           COMMAND: |
             docker pull srfrankie/node16-java11:latest
             docker-compose up -d node16-java11:latest
-
+          REMOTE_SHELL: 'sh'
   pruebaCloudFlare:
     if: false #Job pausado
     runs-on: ubuntu-latest
