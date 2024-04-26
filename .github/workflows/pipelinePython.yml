@@ -79,10 +79,11 @@ jobs:
           sudo apt-get install -y openssh-client
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          echo "frMsA7Pg5FWzTJETbVrrwypIE4Yu0am4BNIfDJCaqTM=" > ~/.ssh/sshkey.pub && chmod 600 ~/.ssh/sshkey.pub
           # ping -c 3 192.168.0.7
           # ping -c 3 ssh.frankietoledo.com.ar
           # dig ssh.frankietoledo.com.ar
-          ssh -i ~/.ssh/id_rsa scrollarmy@192.168.0.7 "docker run srfrankie/node16-java11:1.0.1"
+          ssh -i ~/.ssh/sshkey.pub scrollarmy@192.168.0.7 "docker run srfrankie/node16-java11:1.0.1"
 
 
   test:
