@@ -20,26 +20,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
+      - name: instalar coso
         run: |
           set -x
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+          echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared jammy main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+          sudo apt-get update && sudo apt-get install cloudflared
+          echo -e "Host ssh.frankietoledo.com.ar\nProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h" >> ~/.ssh/config
+          ls -lha ~/.ssh || $(mkdir ~/.ssh)
+          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          ssh scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
           echo "hola mundo"
-      - uses: actions/checkout@v2
-        with:
-          uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
-          HOST: ipv4/ipv6 | host address
-          USER: scrollarmy
-          PORT: 22
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          KEY_TYPE: id_rsa
-          COMMAND: |
-            echo "Hola desde command"
-            docker pull srfrankie/node16-java11:latest
-            docker-compose up -d node16-java11:latest
-          REMOTE_SHELL: 'sh'
 
   pruebaCloudFlare:
     if: false #Job pausado
@@ -88,6 +80,7 @@ jobs:
         run: |
           pytest
   tagging:
+    if: false #Job pausado
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
