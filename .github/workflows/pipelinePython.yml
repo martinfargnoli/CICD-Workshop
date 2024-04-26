@@ -23,18 +23,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy stack to Portainer
-        uses: carlrygart/portainer-stack-deploy@v1
+      - name: Deploy container trough cf service token ssh proxy
+        uses: Genesys225/cloudflared-service-token-ssh-proxy@v1
         with:
-          portainer-host: ${{ secrets.PORTAINER_HOST }}
-          username: ${{ secrets.PORTAINER_USERNAME }}
-          password: ${{ secrets.PORTAINER_PASSWORD }}
-          stack-name: 'my-awesome-web-app'
-          stack-definition: 'stack-definition.yml'
-          template-variables: '{"username": "MrCool"}'
-          image: srfrankie/node16-java11:1.0.1
-          prune-stack: true
-          pull-image: true
+          HOST: ipv4/ipv6 | host address
+          USER: scrollarmy
+          PORT: 22
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          KEY_TYPE: id_rsa
+          REMOTE_SHELL: 'sh'
+          COMMAND: |
+            docker pull srfrankie/node16-java11:latest
+            docker-compose up -d node16-java11:latest
 
   pruebaCloudFlare:
     if: false #Job pausado
