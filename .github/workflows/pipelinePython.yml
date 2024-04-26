@@ -52,7 +52,7 @@ jobs:
           set -x
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh -i ~/.ssh/id_rsa scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
+          ssh -i ~/.ssh/id_rsa -p 5432 scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
     if: false #Job pausado
