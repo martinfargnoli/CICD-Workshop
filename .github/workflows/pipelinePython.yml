@@ -30,11 +30,11 @@ jobs:
       - name: Preparando clave ssh
         run: |
           set -x
+          sudo apt-get update
+          sudo apt-get install -y openssh-client
+          ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.MY_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh scrollarmy@ssh.frankietoledo.com.ar
-          #sudo apt-get update
-          #sudo apt-get install -y openssh-client
-          ssh user@hostname "docker run --rm srfrankie/node16-java11:1.0.1"
+          ssh scrollarmy@ssh.frankietoledo.com.ar -i ~/.ssh/id_rsa "docker run --rm srfrankie/node16-java11:1.0.1"
 
   test:
     runs-on: ubuntu-latest
