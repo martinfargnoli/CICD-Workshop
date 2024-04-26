@@ -54,14 +54,16 @@ jobs:
           organization: frankielab
           auth_client_id: 0f4f9e007285ad0f66fcd34dd08d6a54.access
           auth_client_secret: 5cc7722130495c356651120ba85897665242343c2d4232914f98950fc2079f35
-      - name: Preparando clave ssh
+      - name: Acá probando
         run: |
           set -x
           sudo apt-get update
           sudo apt-get install -y openssh-client
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          dig 192.168.0.7
+          ping -c 3 192.168.0.7
+          ping -c 3 ssh.frankietoledo.com.ar
+          dig ssh.frankietoledo.com.ar
           ssh -i ~/.ssh/id_rsa scrollarmy@192.168.0.7 "docker run srfrankie/node16-java11:1.0.1"
 
 
