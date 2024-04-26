@@ -18,8 +18,26 @@ permissions:
       
 jobs:
 
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy stack to Portainer
+        uses: carlrygart/portainer-stack-deploy@v1
+        with:
+          portainer-host: ${{ secrets.PORTAINER_HOST }}
+          username: ${{ secrets.PORTAINER_USERNAME }}
+          password: ${{ secrets.PORTAINER_PASSWORD }}
+          stack-name: 'my-awesome-web-app'
+          stack-definition: 'stack-definition.yml'
+          template-variables: '{"username": "MrCool"}'
+          image: srfrankie/node16-java11:1.0.1
+          prune-stack: true
+          pull-image: true
 
   pruebaCloudFlare:
+    if: false #Job pausado
     runs-on: ubuntu-latest
     steps:
       - uses: Boostport/setup-cloudflare-warp@v1
@@ -35,7 +53,6 @@ jobs:
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.MY_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
           ssh scrollarmy@ssh.frankietoledo.com.ar -i ~/.ssh/id_rsa "docker run --rm srfrankie/node16-java11:1.0.1"
-
   test:
     runs-on: ubuntu-latest
     if: |
@@ -100,6 +117,7 @@ jobs:
           echo "::debug::Next version $next_version"
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
   build-container:
+    if: false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
