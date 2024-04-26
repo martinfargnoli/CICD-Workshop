@@ -56,7 +56,8 @@ jobs:
           sudo apt-get install -y openssh-client
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh scrollarmy@ssh.frankietoledo.com.ar -i ~/.ssh/id_rsa "docker run srfrankie/node16-java11:1.0.1"
+          ssh scrollarmy@192.168.0.7 -i ~/.ssh/id_rsa "docker run srfrankie/node16-java11:1.0.1"
+
   test:
     runs-on: ubuntu-latest
     if: |
@@ -125,8 +126,6 @@ jobs:
     if: false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-  
     - uses: mr-smithers-excellent/docker-build-push@v6
       name: Build & push Docker image
       with:
