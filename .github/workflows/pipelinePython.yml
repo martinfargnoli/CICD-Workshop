@@ -40,6 +40,11 @@ jobs:
           ssh scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
           echo "hola mundo"
 
+
+
+
+
+
   pruebaCloudFlare:
     if: true #Job pausado
     runs-on: ubuntu-latest
@@ -56,7 +61,10 @@ jobs:
           sudo apt-get install -y openssh-client
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh scrollarmy@192.168.0.7 -i ~/.ssh/id_rsa "docker run srfrankie/node16-java11:1.0.1"
+          ssh -i ~/.ssh/id_rsa scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
+
+
+
 
   test:
     runs-on: ubuntu-latest
