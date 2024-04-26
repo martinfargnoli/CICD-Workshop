@@ -23,15 +23,20 @@ jobs:
       - name: instalar coso
         run: |
           set -x
+          
           sudo mkdir -p --mode=0755 /usr/share/keyrings
           curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
           echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared jammy main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
           sudo apt-get update && sudo apt-get install cloudflared
+          
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
-          echo -e "Host ssh.frankietoledo.com.ar\nProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h" >> ~/.ssh/config
+          
+          echo -e "Host ssh.frankietoledo.com.ar\nProxyCommand /usr/local/bin/cloudflared access ssh -o StrictHostKeyChecking=no --hostname %h" >> ~/.ssh/config
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          
           ls -lha ~/.ssh/
-          ssh -o StrictHostKeyChecking=no scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
+          
+          ssh scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
           echo "hola mundo"
 
   pruebaCloudFlare:
