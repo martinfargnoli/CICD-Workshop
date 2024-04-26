@@ -23,6 +23,7 @@ jobs:
       - shell: bash
         run: |
           set -x
+          echo "hola mundo"
       - uses: actions/checkout@v2
         with:
           uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
@@ -35,9 +36,11 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           KEY_TYPE: id_rsa
           COMMAND: |
+            echo "Hola desde command"
             docker pull srfrankie/node16-java11:latest
             docker-compose up -d node16-java11:latest
           REMOTE_SHELL: 'sh'
+
   pruebaCloudFlare:
     if: false #Job pausado
     runs-on: ubuntu-latest
