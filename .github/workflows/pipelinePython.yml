@@ -40,8 +40,6 @@ jobs:
           ssh scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
           echo "hola mundo"
 
-
-
   pruebaDuckDns:
     if: true #Job pausado
     runs-on: ubuntu-latest
@@ -55,6 +53,7 @@ jobs:
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
           ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
