@@ -45,9 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: instalamos el coso
         run: |
           sudo apt-get install -y sshpass 
@@ -66,7 +63,7 @@ jobs:
           # ssh-copy-id -f scrollarmy@flisol.duckdns.org
           #ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
           
-          sshpass -v -p taller ssh -p 5432 scrollarmy@flisol.duckdns.org 'docker run srfrankie/node16-java11:1.0.1'
+          sshpass -v -p taller ssh -p 5432 scrollarmy@flisol.duckdns.org whoami
 
           #ssh -p 5432 -o StrictHostKeyChecking=no -o BatchMode=yes scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
