@@ -52,10 +52,9 @@ jobs:
           set -x
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ping -c 3 flisol.duckdns.org
-          # ping -c 3 ssh.frankietoledo.com.ar
-          # dig ssh.frankietoledo.com.ar
-          ssh -i ~/.ssh/id_rsa scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
+          telnet flisol.duckdns.org 2200
+          dig 8.8.8.8 -p 2200 flisol.duckdns.org
+          ssh -i ~/.ssh/id_rsa -p 2200 scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
     if: false #Job pausado
