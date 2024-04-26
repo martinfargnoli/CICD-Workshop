@@ -53,7 +53,7 @@ jobs:
           ls -lha ~/.ssh
           echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
 
-          cat ~/.ssh/id_rsa
+          echo "$(cat ~/.ssh/id_rsa)"
           chmod 600 ~/.ssh/id_rsa
 
           ssh-copy-id -f scrollarmy@flisol.duckdns.org
