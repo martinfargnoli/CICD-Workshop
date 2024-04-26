@@ -51,9 +51,9 @@ jobs:
         run: |
           set -x
           mkdir ~/.ssh
-          ls -lha ~/.ssh 
-          ssh-keygen -f ~/.ssh/id_rsa -o <(echo "${{ secrets.PRIVATE_KEY }}")
-          # echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa 
+          ls -lha ~/.ssh
+          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
