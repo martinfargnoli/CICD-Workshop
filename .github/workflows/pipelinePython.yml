@@ -20,6 +20,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - shell: bash
+        run: |
+          set -x
       - uses: actions/checkout@v2
         with:
           uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
