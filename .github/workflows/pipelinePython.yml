@@ -53,7 +53,7 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -e ssh -p 5432 scrollarmy@flisol.duckdns.org whoami
+          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org whoami
           #ssh -p 5432 -o StrictHostKeyChecking=no -o BatchMode=yes scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
