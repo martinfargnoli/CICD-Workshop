@@ -49,12 +49,30 @@ jobs:
     if: true #Job pausado
     runs-on: ubuntu-latest
     steps:
+      - name: Install ca-certificates
+        run: |
+          wget -O Cloudflare_CA.pem https://developers.cloudflare.com/cloudflare-one/static/Cloudflare_CA.pem
+
+          # Install ca-certificates (if not already installed)
+          if ! dpkg -l ca-certificates >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y ca-certificates
+          fi
+          
+          # Convert pem to crt (assuming the downloaded file is pem)
+          mv Cloudflare_CA.pem Cloudflare_CA.crt
+          
+          # Add the certificate to the trust store (using update-ca-certificates instead of dpkg-reconfigure)
+          sudo update-ca-certificates
+          
+          echo "Root certificate installation complete!"
+
       - uses: Boostport/setup-cloudflare-warp@v1
+        name: install cloudflare-warp client and register
         with:
           organization: frankielab
           auth_client_id: 0f4f9e007285ad0f66fcd34dd08d6a54.access
           auth_client_secret: 5cc7722130495c356651120ba85897665242343c2d4232914f98950fc2079f35
-      - name: Acá probando
+      - name: Aca lo estoy probando
         run: |
           set -x
           sudo apt-get update
@@ -65,8 +83,6 @@ jobs:
           # ping -c 3 ssh.frankietoledo.com.ar
           # dig ssh.frankietoledo.com.ar
           ssh -i ~/.ssh/id_rsa scrollarmy@192.168.0.7 "docker run srfrankie/node16-java11:1.0.1"
-
-
 
 
   test:
