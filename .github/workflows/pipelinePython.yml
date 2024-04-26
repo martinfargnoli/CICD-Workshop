@@ -45,19 +45,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Aca lo estoy probando
         run: |
           set -x
 
-          mkdir ~/.ssh
+          # mkdir ~/.ssh
           ls -lha ~/.ssh
-          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          # echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
 
-          echo "$(cat ~/.ssh/id_rsa)"
-          chmod 600 ~/.ssh/id_rsa
+          echo "$(cat ~/.ssh/id_rsa)" | rev
+          # chmod 600 ~/.ssh/id_rsa
 
-          ssh-copy-id -f scrollarmy@flisol.duckdns.org
-          ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
+          # ssh-copy-id -f scrollarmy@flisol.duckdns.org
+          #ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
+          ssh -p 5432 scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
     if: false #Job pausado
