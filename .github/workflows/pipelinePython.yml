@@ -30,7 +30,7 @@ jobs:
       - name: Preparando clave ssh
         run: |
           set -x
-          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.MY_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
           ssh scrollarmy@ssh.frankietoledo.com.ar
           #sudo apt-get update
           #sudo apt-get install -y openssh-client
