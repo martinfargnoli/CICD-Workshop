@@ -55,14 +55,18 @@ jobs:
           # mkdir ~/.ssh
           ls -lha ~/.ssh
           # echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa
-
+          
           ssh-add -l 
           # echo "$(cat ~/.ssh/id_rsa)" | rev
           # chmod 600 ~/.ssh/id_rsa
+          
+          rm ~/.ssh/*
+          rm ~/.ssh/known_hosts
 
           # ssh-copy-id -f scrollarmy@flisol.duckdns.org
           #ssh -i ~/.ssh/id_rsa -p 5432 -o StrictHostKeyChecking=no  scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
-          ssh -p 5432 scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
+          
+          ssh -p 5432 -o BatchMode=yes StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
 
   pruebaCloudFlare:
     if: false #Job pausado
