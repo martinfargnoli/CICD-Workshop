@@ -18,6 +18,7 @@ permissions:
       
 jobs:
   deploy:
+    if: false #Job pausado
     runs-on: ubuntu-latest
     steps:
       - name: instalar coso
@@ -40,7 +41,7 @@ jobs:
           echo "hola mundo"
 
   pruebaCloudFlare:
-    if: false #Job pausado
+    if: true #Job pausado
     runs-on: ubuntu-latest
     steps:
       - uses: Boostport/setup-cloudflare-warp@v1
@@ -54,8 +55,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openssh-client
           ls -lha ~/.ssh || $(mkdir ~/.ssh)
-          echo "${{ secrets.MY_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh scrollarmy@ssh.frankietoledo.com.ar -i ~/.ssh/id_rsa "docker run --rm srfrankie/node16-java11:1.0.1"
+          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          ssh scrollarmy@ssh.frankietoledo.com.ar -i ~/.ssh/id_rsa "docker run srfrankie/node16-java11:1.0.1"
   test:
     runs-on: ubuntu-latest
     if: |
