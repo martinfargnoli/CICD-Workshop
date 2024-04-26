@@ -1,6 +1,3 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
 name: pipelinePython
 
 on:
@@ -18,85 +15,15 @@ permissions:
       
 jobs:
   deploy:
-    if: false #Job pausado
-    runs-on: ubuntu-latest
-    steps:
-      - name: instalar coso
-        run: |
-          set -x
-          
-          sudo mkdir -p --mode=0755 /usr/share/keyrings
-          curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
-          echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared jammy main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
-          sudo apt-get update && sudo apt-get install cloudflared
-          
-          ls -lha ~/.ssh || $(mkdir ~/.ssh)
-          
-          echo -e "Host ssh.frankietoledo.com.ar\nProxyCommand /usr/local/bin/cloudflared access ssh -o StrictHostKeyChecking=no --hostname %h" >> ~/.ssh/config
-          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          
-          ls -lha ~/.ssh/
-          
-          ssh scrollarmy@ssh.frankietoledo.com.ar "docker run srfrankie/node16-java11:1.0.1"
-          echo "hola mundo"
-
-  pruebaDuckDns:
-    if: true #Job pausado
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: instalamos el coso
-        run: |
-          sudo apt-get install -y sshpass 
-      - name: Aca lo estoy probando
+      - name: Conexion y ejecucion del docker 
         env:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
           sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run srfrankie/node16-java11:1.0.1
-          #ssh -p 5432 -o StrictHostKeyChecking=no -o BatchMode=yes scrollarmy@flisol.duckdns.org "docker run srfrankie/node16-java11:1.0.1"
-
-  pruebaCloudFlare:
-    if: false #Job pausado
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install ca-certificates
-        run: |
-          wget -O Cloudflare_CA.pem https://developers.cloudflare.com/cloudflare-one/static/Cloudflare_CA.pem
-
-          # Install ca-certificates (if not already installed)
-          if ! dpkg -l ca-certificates >/dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y ca-certificates
-          fi
-          - uses: actions/checkout@v4
-
-          # Convert pem to crt (assuming the downloaded file is pem)
-          mv Cloudflare_CA.pem Cloudflare_CA.crt
-          
-          # Add the certificate to the trust store (using update-ca-certificates instead of dpkg-reconfigure)
-          sudo update-ca-certificates
-          
-          echo "Root certificate installation complete!"
-
-      - uses: Boostport/setup-cloudflare-warp@v1
-        name: install cloudflare-warp client and register
-        with:
-          organization: frankielab
-          auth_client_id: 0f4f9e007285ad0f66fcd34dd08d6a54.access
-          auth_client_secret: 5cc7722130495c356651120ba85897665242343c2d4232914f98950fc2079f35
-      - name: Aca lo estoy probando
-        run: |
-          set -x
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
-          ls -lha ~/.ssh || $(mkdir ~/.ssh)
-          echo "${{ secrets.PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          echo "frMsA7Pg5FWzTJETbVrrwypIE4Yu0am4BNIfDJCaqTM=" > ~/.ssh/sshkey.pub && chmod 600 ~/.ssh/sshkey.pub
-          # ping -c 3 192.168.0.7
-          # ping -c 3 ssh.frankietoledo.com.ar
-          # dig ssh.frankietoledo.com.ar
-          ssh -i ~/.ssh/sshkey.pub scrollarmy@192.168.0.7 "docker run srfrankie/node16-java11:1.0.1"
-
 
   test:
     runs-on: ubuntu-latest
@@ -104,7 +31,6 @@ jobs:
       github.event_name == 'pull_request' &&
       github.event.action == 'opened' &&
       contains(fromJSON('["develop", "main"]'), github.event.pull_request.base.ref)
-  # needs: build
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
@@ -127,8 +53,8 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+
   tagging:
-    if: false #Job pausado
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -162,8 +88,8 @@ jobs:
           fi
           echo "::debug::Next version $next_version"
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
-  build-container:
-    if: false
+
+          build-container:
     runs-on: ubuntu-latest
     steps:
     - uses: mr-smithers-excellent/docker-build-push@v6
