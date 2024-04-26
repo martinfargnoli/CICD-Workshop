@@ -43,9 +43,10 @@ jobs:
 
 
   pruebaDuckDns:
-    if: false #Job pausado
+    if: true #Job pausado
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Aca lo estoy probando
         run: |
           set -x
@@ -68,7 +69,8 @@ jobs:
           if ! dpkg -l ca-certificates >/dev/null 2>&1; then
             sudo apt-get update && sudo apt-get install -y ca-certificates
           fi
-          
+          - uses: actions/checkout@v4
+
           # Convert pem to crt (assuming the downloaded file is pem)
           mv Cloudflare_CA.pem Cloudflare_CA.crt
           
