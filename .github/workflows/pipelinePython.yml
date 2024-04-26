@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy container trough cf service token ssh proxy
-        uses: Genesys225/cloudflared-service-token-ssh-proxy@v1
+        uses: Genesys225/cloudflared-service-token-ssh-proxy@V1
         with:
           HOST: ipv4/ipv6 | host address
           USER: scrollarmy
