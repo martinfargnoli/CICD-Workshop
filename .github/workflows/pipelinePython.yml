@@ -127,4 +127,4 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker stop $APP_NAME && docker run --name $APP_NAME -p 5000:5000 -d --rm ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
+          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker stop $APP_NAME || docker run --name $APP_NAME -p 5000:5000 -d --rm ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
