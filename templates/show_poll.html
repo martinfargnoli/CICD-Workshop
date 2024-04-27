@@ -2,13 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inspect Poll</title>
+    <!-- Vincular Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h3>Poll: {{ poll['poll'] }}</h3>
-<p><b>{{ poll['option1'] }}:</b> {{ poll['votes1'] }} <a href="{{ url_for('vote', id=poll.name, option=1) }}">Vote</a></p>
-<p><b>{{ poll['option2'] }}:</b> {{ poll['votes2'] }} <a href="{{ url_for('vote', id=poll.name, option=2) }}">Vote</a></p>
-<p><b>{{ poll['option3'] }}:</b> {{ poll['votes3'] }} <a href="{{ url_for('vote', id=poll.name, option=3) }}">Vote</a></p>
-<a href="{{ url_for('index') }}">Back</a>
+<div class="container">
+    <h3 class="mt-3">Poll: {{ poll['poll'] }}</h3>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text"><b>{{ poll['option1'] }}:</b> {{ poll['votes1'] }} <a href="{{ url_for('vote', id=poll.name, option=1) }}" class="btn btn-primary">Vote</a></p>
+            <p class="card-text"><b>{{ poll['option2'] }}:</b> {{ poll['votes2'] }} <a href="{{ url_for('vote', id=poll.name, option=2) }}" class="btn btn-primary">Vote</a></p>
+            <p class="card-text"><b>{{ poll['option3'] }}:</b> {{ poll['votes3'] }} <a href="{{ url_for('vote', id=poll.name, option=3) }}" class="btn btn-primary">Vote</a></p>
+        </div>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+</div>
+<!-- Vincular Bootstrap JS (opcional, solo si necesitas funcionalidades de JavaScript de Bootstrap) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
