@@ -88,7 +88,7 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v6
       name: Build and push Docker image
       env:
-          tag: ${{ steps.calculate_version.outputs.next_version }}
+          tag: ${{ needs.tagging.outputs.next_version }}
       with:
         image: ${{ secrets.DOCKER_USERNAME }}/$APP_NAME
         tags: $tag
