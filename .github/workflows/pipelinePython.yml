@@ -12,6 +12,7 @@ on:
 
 env:
   APP_NAME: surveyapp
+  USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 permissions:
   contents: read
@@ -94,10 +95,10 @@ jobs:
       env:
           tag: ${{ needs.tagging.outputs.nextver }}
       with:
-        image: ${{ secrets.DOCKER_USERNAME }}/$APP_NAME
+        image: $USERNAME/$APP_NAME
         tags: $tag
         registry: docker.io
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: $USERNAME
         password: ${{ secrets.DOCKER_PASSWORD }}
 
   repo-tag:
@@ -128,4 +129,5 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker stop $APP_NAME && sleep 11 && docker run --name $APP_NAME -p 5000:5000 -d ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
+          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker stop $APP_NAME && sleep 10
+          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run --name $APP_NAME -p 5000:5000 -d --rm $USERNAME/$APP_NAME:${{ needs.tagging.outputs.nextver }}
