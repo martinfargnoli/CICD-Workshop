@@ -112,7 +112,7 @@ jobs:
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/tags/${{ tag }}',              
+            ref: 'refs/tags/${{ needs.tagging.outputs.nextver }}',              
             sha: context.sha
           })
      
