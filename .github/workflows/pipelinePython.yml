@@ -101,6 +101,7 @@ jobs:
 
   repo-tag:
     runs-on: ubuntu-latest
+    permissions: write-all
     needs: [tagging, build-image]
     steps:
     - uses: actions/github-script@v7.0.1
