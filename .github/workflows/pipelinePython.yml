@@ -118,7 +118,7 @@ jobs:
      
   deploy:
     runs-on: ubuntu-latest
-    needs: build-image
+    needs: [tagging, build-image]
     steps:
       - uses: actions/checkout@v4
       - name: Connection to server and deploy app 
@@ -126,4 +126,4 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run --name $APP_NAME ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.build-image.env.tag }}
+          sshpass -v -p 'taller' ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run --name $APP_NAME ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
