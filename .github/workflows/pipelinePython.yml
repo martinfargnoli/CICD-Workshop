@@ -126,4 +126,4 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run --name $APP_NAME ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:$next_version
+          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run --name $APP_NAME ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.build-image.env.tag }}
