@@ -87,6 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tagging
     steps:
+    - uses: actions/checkout@v4
     - name: Avergaston
       run: |
          ls -lha
