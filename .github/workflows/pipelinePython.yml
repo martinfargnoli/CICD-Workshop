@@ -10,50 +10,13 @@ on:
       - main
       - develop
 
+env:
+  APP_NAME: surveyapp
+
 permissions:
   contents: read
       
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Conexion y ejecucion del docker 
-        env:
-          SSHPASS: ${{ secrets.SSHPASS }}
-        run: |
-          set -x          
-          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run srfrankie/node16-java11:1.0.1
-
-  test:
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.action == 'opened' &&
-      contains(fromJSON('["develop", "main"]'), github.event.pull_request.base.ref)
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          
-      - name: Lint with flake8
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-      - name: Test with pytest
-        run: |
-          pytest
-
   tagging:
     runs-on: ubuntu-latest
     steps:
@@ -88,15 +51,59 @@ jobs:
           fi
           echo "::debug::Next version $next_version"
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
-
-          build-container:
+          
+  test:
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      contains(fromJSON('["develop", "main"]'), github.event.pull_request.base.ref)
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Test with pytest
+        run: |
+          pytest
+          
+  build-image:
+    runs-on: ubuntu-latest
+    needs: tagging
     steps:
     - uses: mr-smithers-excellent/docker-build-push@v6
-      name: Build & push Docker image
+      name: Build and push Docker image
+      env:
+          tag: ${{ steps.calculate_version.outputs.next_version }}
       with:
-        image: martinfargnoli/cicd
-        tags: latest
+        image: ${{ secrets.DOCKER_USERNAME }}/$APP_NAME
+        tags: $tag
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-image
+    steps:
+      - uses: actions/checkout@v4
+      - name: Connection to server and deploy app 
+        env:
+          SSHPASS: ${{ secrets.SSHPASS }}
+        run: |
+          set -x          
+          sshpass -v -e ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker run ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:$next_version
