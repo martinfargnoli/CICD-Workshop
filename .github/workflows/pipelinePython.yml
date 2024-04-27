@@ -19,6 +19,8 @@ permissions:
 jobs:
   tagging:
     runs-on: ubuntu-latest
+    outputs:
+      nextver: ${{ steps.calculate_version.outputs.next_version }}
     steps:
       - uses: actions/checkout@v4
       - name: Get latest release version
@@ -88,7 +90,7 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v6
       name: Build and push Docker image
       env:
-          tag: ${{ needs.tagging.outputs.next_version }}
+          tag: ${{ needs.tagging.outputs.nextver }}
       with:
         image: ${{ secrets.DOCKER_USERNAME }}/$APP_NAME
         tags: $tag
