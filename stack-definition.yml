@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  server:
+    image: ghcr.io/srfrankie/node16-java11:latest
+    deploy:
+      update_config:
+        order: start-first
