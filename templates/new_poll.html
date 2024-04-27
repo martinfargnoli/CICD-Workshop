@@ -2,28 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Poll</title>
+    <!-- Vincular Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h3>Create New Poll</h3>
-    <form action="{{ url_for("create_poll") }}" method="post">
-        <label for="poll">
-            Poll Text
-            <input type="text" name="poll" placeholder="Poll Text">
-        </label><br><br>
-        <label for="option1">
-            Option 1
-            <input type="text" name="option1" placeholder="Option 1">
-        </label><br><br>
-        <label for="option2">
-            Option 2
-            <input type="text" name="option2" placeholder="Option 2">
-        </label><br><br>
-        <label for="option3">
-            Option 3
-            <input type="text" name="option3" placeholder="Option 3">
-        </label><br><br>
-        <input type="submit" value="Create">
+<div class="container">
+    <h3 class="mt-3">Create New Poll</h3>
+    <form action="{{ url_for('create_poll') }}" method="post">
+        <div class="form-group">
+            <label for="poll">Poll Text</label>
+            <input type="text" class="form-control" name="poll" id="poll" placeholder="Poll Text">
+        </div>
+        <div class="form-group">
+            <label for="option1">Option 1</label>
+            <input type="text" class="form-control" name="option1" id="option1" placeholder="Option 1">
+        </div>
+        <div class="form-group">
+            <label for="option2">Option 2</label>
+            <input type="text" class="form-control" name="option2" id="option2" placeholder="Option 2">
+        </div>
+        <div class="form-group">
+            <label for="option3">Option 3</label>
+            <input type="text" class="form-control" name="option3" id="option3" placeholder="Option 3">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
     </form>
+</div>
+<!-- Vincular Bootstrap JS (opcional, solo si necesitas funcionalidades de JavaScript de Bootstrap) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

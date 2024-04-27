@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polling App</title>
+    <!-- Vincular Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h3>Polls</h3>
-<ul>
-{% for key, value in polls.iterrows() %}
-    <li><a href="{{ url_for('polls', id=key) }}">{{ value['poll'] }}</a></li>
-{% endfor %}
-</ul>
+<div class="container">
+    <h3 class="mt-3">Polls</h3>
+    <ul class="list-group">
+        {% for key, value in polls.iterrows() %}
+            <li class="list-group-item"><a href="{{ url_for('polls', id=key) }}">{{ value['poll'] }}</a></li>
+        {% endfor %}
+    </ul>
 
-<a href="{{ url_for('create_poll') }}">Create New Poll</a>
+    <a href="{{ url_for('create_poll') }}" class="btn btn-primary mt-3">Create New Poll</a>
+</div>
+<!-- Vincular Bootstrap JS (opcional, solo si necesitas funcionalidades de JavaScript de Bootstrap) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,3 +1,6 @@
 id,poll,option1,option2,option3,votes1,votes2,votes3
 1,Test,A,B,C,1,2,1
 2,Test2,d,e,f,0,1,0
+3,Que SO usas?,Linux,L I N U X,ese del pingüino,0,0,0
+4,01293,a,b,c,0,1,0
+5,,,,,0,0,0
