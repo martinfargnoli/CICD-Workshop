@@ -28,7 +28,7 @@ jobs:
         run: |
           set -x
           echo "------------------------"
-          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/tags" | python -c "import sys, json; print(json.load(sys.stdin).get('name', 'v0.0.0'))")
+          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/tags" | python -c "import sys, json; print(json.load(sys.stdin[0]).get('name', 'v0.0.0'))")
           echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
           echo "::debug::Release version seteado $release_version"
         env:
