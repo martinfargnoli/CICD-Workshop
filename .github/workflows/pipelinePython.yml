@@ -126,4 +126,4 @@ jobs:
           SSHPASS: ${{ secrets.SSHPASS }}
         run: |
           set -x          
-          sshpass -v -p 'taller' ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker-compose up --build -d ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
+          sshpass -v -p $SSHPASS ssh -p 5432 -o StrictHostKeyChecking=no scrollarmy@flisol.duckdns.org docker compose up --build -d ${{ secrets.DOCKER_USERNAME }}/$APP_NAME:${{ needs.tagging.outputs.nextver }}
